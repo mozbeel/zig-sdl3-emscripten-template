@@ -48,6 +48,10 @@
             .url = "git+https://github.com/Gota7/zig-sdl3.git#f27bf7e8f4b766224ed0f2d3871495ddac34c153",
             .hash = "sdl3-0.0.1-NmT1Qw2tHgBYwm1B4ojnCIuQtqTGsduxp4ZgzxVVwl3n",
         },
+        .android = .{
+            .url = "git+https://github.com/silbinarywolf/zig-android-sdk#37e4be60737bfed6a6ebe3b4be6320bf2f086bcb",
+            .hash = "android-0.1.0-7iz7QoDAAQDOhpOzTf1IcZsqfno50Ac4P1wyqefIclDX",
+        },
     },
     .paths = .{
         "build.zig",

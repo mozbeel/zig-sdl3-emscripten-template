@@ -7,6 +7,8 @@ pub fn build(b: *std.Build) !void {
 
     if (target.query.os_tag == .emscripten) {
         try buildWeb(b, target, optimize);
+    } else if(target.query.abi == .android or target.query.abi == .androideabi) {
+        @panic("This isn't supported (yet)");
     } else {
         try buildBin(b, target, optimize);
     }
