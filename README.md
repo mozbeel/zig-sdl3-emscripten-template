@@ -17,13 +17,15 @@ A simple template for a sdl3 Zig project with the zemscripten build abstraction
     https://nix.dev/permalink/stub-ld
     emcc: error: '/home/leeb/.cache/zig/p/N-V-__8AAOG3BQCJ9cn-N2swm2o5cLmDhmdHmtwNngOChK78/upstream/bin/clang --version' failed (returned 127)
 
+
+```
 So the full command becomes:
 ```bash
     steam-run zig build -Dtarget=wasm32-emscripten -Doptimize=ReleaseSmall --sysroot <path/to/emsdk>/upstream/emscripten/cache/sysroot
 
 ```
 
-```
+
 3. Run it via
 ```bash
     emrun --no_browser zig-out/web/MyGame.html --port 8080
