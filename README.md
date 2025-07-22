@@ -30,13 +30,13 @@ So the full command becomes:
 ```
 
 
-3. Run it via
+4. Run it via
 ```bash
     emrun --no_browser zig-out/web/MyGame.html --port 8080
 ```
 
-   And it should look like this:
-![Screenshot](Screenshot.png)
+If you picked either of the Basic SDL3 templates it should look like this:
+![Screenshot](templates/callbacks/Screenshot.png)
 
 Also if you'd like to use raylib this might be a good reference for it:
 <a href="https://github.com/aidanaden/aztewoidz/blob/53508a0c8a3a759a06b321308b1c1da6c2b4976f/build.zig#L125">https://github.com/aidanaden/aztewoidz/blob/53508a0c8a3a759a06b321308b1c1da6c2b4976f/build.zig#L125</a>
