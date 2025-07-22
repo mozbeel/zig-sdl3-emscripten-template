@@ -9,6 +9,7 @@ A simple template for a sdl3 Zig project with the zemscripten build abstraction
 
 ```
     Due to NixOS' immutable environment you will have to run via the ```steam-run``` prefix. You might get an error like this otherwise:
+```
 
 ```bash
     Could not start dynamically linked executable: /home/leeb/.cache/zig/p/N-V-__8AAOG3BQCJ9cn-N2swm2o5cLmDhmdHmtwNngOChK78/upstream/bin/clang
