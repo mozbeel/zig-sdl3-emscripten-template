@@ -7,7 +7,6 @@ A simple template for a <a href="https://github.com/Gota7/zig-sdl3">zig-sdl3</a>
 ```bash
     zig build -Dtarget=wasm32-emscripten -Doptimize=ReleaseSmall --sysroot <path/to/emsdk>/upstream/emscripten/cache/sysroot
 
-```
     Due to NixOS' immutable environment you will have to run via the ```steam-run``` prefix. You might get an error like this otherwise:
 
 ```bash
