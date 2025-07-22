@@ -1,11 +1,7 @@
 # zig-sdl3-emscripten-template
-A simple template for a <a href="https://github.com/Gota7/zig-sdl3">zig-sdl3</a> project with the zemscripten build abstraction
+A simple template for a sdl3 Zig project with the zemscripten build abstraction
 
 ## How to build the Project:
-1. Choose a template:
-   - This project currently shows off two templates:
-     - Basic SDL3 (no callbacks)
-     - Basic SDL3 (callbacks)
 1. Install <a href="https://emscripten.org/docs/getting_started/downloads.html">Emscripten</a>
 2. Build via
 ```bash
