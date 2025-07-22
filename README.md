@@ -6,8 +6,8 @@ A simple template for a <a href="https://github.com/Gota7/zig-sdl3">zig-sdl3</a>
    - This project currently shows off two templates:
      - Basic SDL3 (no callbacks)
      - Basic SDL3 (callbacks)
-1.1. Install <a href="https://emscripten.org/docs/getting_started/downloads.html">Emscripten</a>
-2. Build via
+2. Install <a href="https://emscripten.org/docs/getting_started/downloads.html">Emscripten</a>
+3. Build via
 ```bash
     zig build -Dtarget=wasm32-emscripten -Doptimize=ReleaseSmall --sysroot <path/to/emsdk>/upstream/emscripten/cache/sysroot
 
