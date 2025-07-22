@@ -10,7 +10,6 @@ A simple template for a <a href="https://github.com/Gota7/zig-sdl3">zig-sdl3</a>
 3. Build via
 ```bash
     zig build -Dtarget=wasm32-emscripten -Doptimize=ReleaseSmall --sysroot <path/to/emsdk>/upstream/emscripten/cache/sysroot
-
 ```
 Due to NixOS' immutable environment you will have to run via the ```steam-run``` prefix. You might get an error like this otherwise:
 
@@ -20,13 +19,10 @@ Due to NixOS' immutable environment you will have to run via the ```steam-run```
     linux environments out of the box. For more information, see:
     https://nix.dev/permalink/stub-ld
     emcc: error: '/home/leeb/.cache/zig/p/N-V-__8AAOG3BQCJ9cn-N2swm2o5cLmDhmdHmtwNngOChK78/upstream/bin/clang --version' failed (returned 127)
-
-
 ```
 So the full command becomes:
 ```bash
     steam-run zig build -Dtarget=wasm32-emscripten -Doptimize=ReleaseSmall --sysroot <path/to/emsdk>/upstream/emscripten/cache/sysroot
-
 ```
 
 4. Run it via
