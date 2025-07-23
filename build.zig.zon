@@ -40,6 +40,18 @@
             .url = "git+https://github.com/mozbeel/SDL-zig.git#1da81392e83b26df334a078399ca800cac40d298",
             .hash = "sdl-0.2.5+3.2.18-7uIn9MsafwEOROo6sL59rvEEL-WoRXaFtAYJeqgswzdt",
         },
+        .zemscripten = .{
+            .url = "git+https://github.com/zig-gamedev/zemscripten#530922576303be7e508f91dc4d01c4ef0313354a",
+            .hash = "zemscripten-0.2.0-dev-sRlDqLZNAACIhNm0fieWGFmmzm9u7DDQIXe0bu_SmRop",
+        },
+        .emsdk = .{
+            .url = "https://github.com/emscripten-core/emsdk/archive/refs/tags/4.0.3.tar.gz",
+            .hash = "N-V-__8AAOG3BQCJ9cn-N2swm2o5cLmDhmdHmtwNngOChK78",
+        },
+        .android = .{
+            .url = "git+https://github.com/silbinarywolf/zig-android-sdk.git#f3ddba2eaa646cc2eb0a54bbb2dd45e5e34b82cd",
+            .hash = "android-0.1.0-7iz7QonGAQD13s0QwlB6YPnwh2yhShuUARO2WZQmuaOA",
+        },
     },
     .paths = .{
         "build.zig",
