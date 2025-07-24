@@ -110,11 +110,9 @@ fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 
         const sdl_lib = sdl.artifact("SDL3");
 
-        sdl_lib.addSystemIncludePath(.{ .cwd_relative = "/home/leeb/Android/Sdk/ndk/29.0.13599879/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/"});
         exe.linkLibC();
         exe.linkLibrary(sdl_lib);
-        exe.addSystemIncludePath(.{ .cwd_relative = "/home/leeb/Android/Sdk/ndk/29.0.13599879/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/"});
-
+        sdl_lib.linkLibC();
 
         // if building as library for Android, add this target
         // NOTE: Android has different CPU targets so you need to build a version of your
