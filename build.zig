@@ -1,5 +1,6 @@
 const std = @import("std");
 const zemscripten = @import("zemscripten");
+const android = @import("android");
 
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
@@ -8,9 +9,8 @@ pub fn build(b: *std.Build) !void {
     const os = target.result.os.tag;
     const abi = target.result.abi;
     if (abi == .android) {
-        @panic("No Android support yet!");
-    }
-    if (os == .windows or os == .linux or os == .macos) {
+        try buildApk(b, target, optimize);
+    } else if (os == .windows or os == .linux or os == .macos) {
         try buildBin(b, target, optimize);
     } else if(os == .emscripten) {
         try buildWeb(b, target, optimize);
@@ -51,6 +51,105 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 
     const run_step = b.step("run", "Run the App");
     run_step.dependOn(&run_cmd.step);
+}
+
+fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) !void {
+    const exe_name: []const u8 = "minimal";
+    const android_targets = android.standardTargets(b, target);
+
+    var root_target_single = [_]std.Build.ResolvedTarget{target};
+    const targets: []std.Build.ResolvedTarget = if (android_targets.len == 0)
+        root_target_single[0..]
+    else
+        android_targets;
+
+    const android_apk: ?*android.Apk = blk: {
+        if (android_targets.len == 0) break :blk null;
+
+        const android_sdk = android.Sdk.create(b, .{});
+        const apk = android_sdk.createApk(.{
+            .api_level = .android15,
+            .build_tools_version = "35.0.1",
+            .ndk_version = "29.0.13599879",
+        });
+        const key_store_file = android_sdk.createKeyStore(.example);
+        apk.setKeyStore(key_store_file);
+        apk.setAndroidManifest(b.path("android/AndroidManifest.xml"));
+        apk.addResourceDirectory(b.path("android/res"));
+
+        // Add Java files
+        // - If you have 'android:hasCode="false"' in your AndroidManifest.xml then no Java files are required
+        //   see: https://developer.android.com/ndk/samples/sample_na
+        //
+        //   WARNING: If you do not provide Java files AND android:hasCode="false" isn't explicitly set, then you may get the following error on "adb install"
+        //      Scanning Failed.: Package /data/app/base.apk code is missing]
+        //
+        // apk.addJavaSourceFile(.{ .file = b.path("android/src/X.java") });
+        break :blk apk;
+    };
+    for (targets) |t| {
+        const app_module = b.createModule(.{
+            .target = t,
+            .optimize = optimize,
+            .root_source_file = b.path("src/main.zig"),
+        });
+
+        var exe: *std.Build.Step.Compile = if (t.result.abi.isAndroid()) b.addLibrary(.{
+            .name = exe_name,
+            .root_module = app_module,
+            .linkage = .dynamic,
+        }) else b.addExecutable(.{
+            .name = exe_name,
+            .root_module = app_module,
+        });
+
+        const sdl = b.dependency("sdl", .{
+            .target = t,
+            .optimize = optimize,
+        });
+
+        const sdl_lib = sdl.artifact("SDL3");
+
+        sdl_lib.addSystemIncludePath(.{ .cwd_relative = "/home/leeb/Android/Sdk/ndk/29.0.13599879/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/"});
+        exe.linkLibC();
+        exe.linkLibrary(sdl_lib);
+        exe.addSystemIncludePath(.{ .cwd_relative = "/home/leeb/Android/Sdk/ndk/29.0.13599879/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/"});
+
+
+        // if building as library for Android, add this target
+        // NOTE: Android has different CPU targets so you need to build a version of your
+        //       code for x86, x86_64, arm, arm64 and more
+        if (target.result.abi.isAndroid()) {
+            const apk: *android.Apk = android_apk orelse @panic("Android APK should be initialized");
+            const android_dep = b.dependency("android", .{
+                .optimize = optimize,
+                .target = t,
+            });
+            exe.root_module.addImport("android", android_dep.module("android"));
+
+            apk.addArtifact(exe);
+        } else {
+            b.installArtifact(exe);
+
+            // If only 1 target, add "run" step
+            if (targets.len == 1) {
+                const run_step = b.step("run", "Run the application");
+                const run_cmd = b.addRunArtifact(exe);
+                run_step.dependOn(&run_cmd.step);
+            }
+        }
+    }
+    if (android_apk) |apk| {
+        const installed_apk = apk.addInstallApk();
+        b.getInstallStep().dependOn(&installed_apk.step);
+
+        const android_sdk = apk.sdk;
+        const run_step = b.step("run", "Install and run the application on an Android device");
+        const adb_install = android_sdk.addAdbInstall(installed_apk.source);
+        const adb_start = android_sdk.addAdbStart("com.zig.minimal/android.app.NativeActivity");
+        adb_start.step.dependOn(&adb_install.step);
+        run_step.dependOn(&adb_start.step);
+    }
 }
 
 fn buildWeb(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) !void {
