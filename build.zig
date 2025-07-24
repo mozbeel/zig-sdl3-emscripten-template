@@ -113,6 +113,9 @@ fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
         exe.linkLibC();
         exe.linkLibrary(sdl_lib);
         sdl_lib.linkLibC();
+        sdl_lib.linkSystemLibrary("unwind");
+        sdl_lib.linkSystemLibrary("c++abi");
+    
 
         // if building as library for Android, add this target
         // NOTE: Android has different CPU targets so you need to build a version of your
