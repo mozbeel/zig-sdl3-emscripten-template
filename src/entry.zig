@@ -2,6 +2,7 @@ const std = @import("std");
 const c = @cImport({
     @cInclude("SDL3/SDL.h");
 });
+const builtin = @import("builtin");
 
 var window : ?*c.SDL_Window = undefined;
 var renderer: ?*c.SDL_Renderer = undefined;
@@ -12,8 +13,23 @@ pub fn init() !void {
         std.log.err("Failed to initialize SDL", .{});
         return error.InitSDLFailed;
     }
+    
+    var window_width : u16 = 1280;
+    var window_height : u16 = 720;
 
-    if(!c.SDL_CreateWindowAndRenderer("Basic SDL3", 1280, 720, 0, &window, &renderer)) {
+    if (builtin.abi.isAndroid() or builtin.target.os.tag == .ios) {
+        const display_mode = c.SDL_GetCurrentDisplayMode(c.SDL_GetPrimaryDisplay());
+
+        if (display_mode.?) |d| {
+            window_width = @intCast(d.*.w);
+            window_height = @intCast(d.*.h);
+        } else {
+            std.log.err("Couldn't get screen size", .{});
+            return error.InitSDLWindowSizeFailed;
+        }
+    }
+
+    if(!c.SDL_CreateWindowAndRenderer("Basic SDL3", window_width, window_height, 0, &window, &renderer)) {
         std.log.err("Failed to initialize SDL Window or Renderer: {s}", .{ c.SDL_GetError() }); 
         return error.InitWindowOrRendererFailed;
     }

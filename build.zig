@@ -1,14 +1,18 @@
 const std = @import("std");
 const zemscripten = @import("zemscripten");
 const android = @import("android");
+const root = @import("root");
 
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     
+    
+
     const os = target.result.os.tag;
     const abi = target.result.abi;
-    if (abi == .android) {
+
+    if (abi.isAndroid()) {
         try buildApk(b, target, optimize);
     } else if (os == .windows or os == .linux or os == .macos) {
         try buildBin(b, target, optimize);
@@ -54,7 +58,7 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 }
 
 fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) !void {
-    const exe_name: []const u8 = "minimal";
+    const exe_name: []const u8 = "main";
     const android_targets = android.standardTargets(b, target);
 
     var root_target_single = [_]std.Build.ResolvedTarget{target};
@@ -103,13 +107,12 @@ fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
         const app_module = b.createModule(.{
             .target = t,
             .optimize = optimize,
-            .root_source_file = b.path("src/main.zig"),
+            .root_source_file = b.path("src/main-android.zig"),
         });
 
-        var exe: *std.Build.Step.Compile = if (t.result.abi.isAndroid()) b.addLibrary(.{
+        var exe: *std.Build.Step.Compile = if (t.result.abi.isAndroid()) b.addSharedLibrary(.{
             .name = exe_name,
             .root_module = app_module,
-            .linkage = .dynamic,
         }) else b.addExecutable(.{
             .name = exe_name,
             .root_module = app_module,

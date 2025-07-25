@@ -49,8 +49,8 @@
             .hash = "android-0.1.0-7iz7QonGAQD13s0QwlB6YPnwh2yhShuUARO2WZQmuaOA",
         },
         .sdl = .{
-            .url = "git+https://github.com/mozbeel/SDL-zig#8899f282e37721db26bb757a2b84470cb2011403",
-            .hash = "sdl-0.2.5+3.2.18-7uIn9FFRggFiXjkA7FT09_pz0GF8KN6bUNV16_YIEI6Q",
+            .url = "git+https://github.com/mozbeel/SDL-zig#c320da13abe479bdd5109281aff07c515d95f29f",
+            .hash = "sdl-0.2.5+3.2.18-7uIn9FBWggGNoLTKHS8KofpjB0CWAsvddDDcQvrYhQp3",
         },
     },
     .paths = .{
