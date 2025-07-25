@@ -1,6 +1,7 @@
 const builtin = @import("builtin");
 const entry = @import("entry.zig");
 const android = @import("android");
+const std = @import("std");
 
 pub const std_options: std.Options = if (builtin.abi.isAndroid())
     .{
@@ -8,9 +9,8 @@ pub const std_options: std.Options = if (builtin.abi.isAndroid())
     }
 else
     .{};
-const std = @import("std");
 
-pub export fn main(argc: c_int, argv: [*]*?*const u8) callconv(.c) c_int {
+export fn main(argc: c_int, argv: [*]*?*const u8) callconv(.c) c_int {
     _ = argc;
     _ = argv;
     std.log.info("Hello World!", .{});
