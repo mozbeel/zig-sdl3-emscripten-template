@@ -85,6 +85,18 @@ fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
         //      Scanning Failed.: Package /data/app/base.apk code is missing]
         //
         // apk.addJavaSourceFile(.{ .file = b.path("android/src/X.java") });
+        apk.addJavaSourceFile(.{ .file = b.path("android/src/ZigSDLActivity.java")});
+
+        const sdl = b.dependency("sdl", .{
+            .target = android_targets[0],
+            .optimize = optimize,
+        });
+
+        const sdl_java_files = sdl.namedWriteFiles("sdljava");
+        for (sdl_java_files.files.items) |file| {
+            apk.addJavaSourceFile(.{.file = file.contents.copy});
+        }
+
         break :blk apk;
     };
     for (targets) |t| {
@@ -110,12 +122,8 @@ fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 
         const sdl_lib = sdl.artifact("SDL3");
 
-        exe.linkLibC();
         exe.linkLibrary(sdl_lib);
-        sdl_lib.linkLibC();
-        sdl_lib.linkSystemLibrary("unwind");
-        sdl_lib.linkSystemLibrary("c++abi");
-    
+        exe.linkLibC();
 
         // if building as library for Android, add this target
         // NOTE: Android has different CPU targets so you need to build a version of your
@@ -147,7 +155,7 @@ fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
         const android_sdk = apk.sdk;
         const run_step = b.step("run", "Install and run the application on an Android device");
         const adb_install = android_sdk.addAdbInstall(installed_apk.source);
-        const adb_start = android_sdk.addAdbStart("com.zig.minimal/android.app.NativeActivity");
+        const adb_start = android_sdk.addAdbStart("com.zig.minimal/com.zig.minimal.ZigSDLActivity");
         adb_start.step.dependOn(&adb_install.step);
         run_step.dependOn(&adb_start.step);
     }

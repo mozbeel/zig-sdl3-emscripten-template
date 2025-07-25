@@ -30,44 +30,20 @@
         android:name="android.hardware.type.pc"
         android:required="false" />
 
-    <!-- Audio recording support -->
-    <!-- if you want to capture audio, uncomment this. -->
-    <!-- <uses-feature
-        android:name="android.hardware.microphone"
-        android:required="false" /> -->
-
-    <!-- Allow downloading to the external storage on Android 5.1 and older -->
-    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="22" /> -->
-
-    <!-- Allow access to Bluetooth devices -->
-    <!-- Currently this is just for Steam Controller support and requires setting SDL_HINT_JOYSTICK_HIDAPI_STEAM -->
-    <!-- <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" /> -->
-    <!-- <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> -->
-
     <!-- Allow access to the vibrator -->
     <uses-permission android:name="android.permission.VIBRATE" />
-
-    <!-- if you want to capture audio, uncomment this. -->
-    <!-- <uses-permission android:name="android.permission.RECORD_AUDIO" /> -->
-
-    <!-- Create a Java class extending SDLActivity and place it in a
-         directory under app/src/main/java matching the package, e.g. app/src/main/java/com/gamemaker/game/MyGame.java
- 
-         then replace "SDLActivity" with the name of your class (e.g. "MyGame")
-         in the XML below.
-
-    An example Java class can be found in README-android.md -->
-
 
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:allowBackup="true"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-        tools:targetApi="35"
-        android:hardwareAccelerated="true">
+        android:supportsRtl="true"
+        tools:targetApi="31"
+        android:hardwareAccelerated="true"
+        android:hasCode="true">
         <activity
-            android:name="SDLActivity"
+            android:name="com.zig.minimal.ZigSDLActivity"
             android:label="@string/app_name"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"
@@ -78,6 +54,9 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+              </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
         </activity>
     </application>
