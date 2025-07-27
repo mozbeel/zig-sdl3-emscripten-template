@@ -6,14 +6,12 @@ const root = @import("root");
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    
-    
-
+    const android_targets : []std.Build.ResolvedTarget = android.standardTargets(b, target);
+   
     const os = target.result.os.tag;
-    const abi = target.result.abi;
 
-    if (abi.isAndroid()) {
-        try buildApk(b, target, optimize);
+    if (android_targets.len > 0) {
+        try buildApk(b, android_targets, optimize);
     } else if (os == .windows or os == .linux or os == .macos) {
         try buildBin(b, target, optimize);
     } else if(os == .emscripten) {
@@ -57,15 +55,14 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
     run_step.dependOn(&run_cmd.step);
 }
 
-fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) !void {
+fn buildApk(
+    b: *std.Build,
+    android_targets: []std.Build.ResolvedTarget,
+    optimize: std.builtin.OptimizeMode
+    ) !void {
+    if (android_targets.len == 0) return error.MustProvideAndroidTargets;
     const exe_name: []const u8 = "main";
-    const android_targets = android.standardTargets(b, target);
-
-    var root_target_single = [_]std.Build.ResolvedTarget{target};
-    const targets: []std.Build.ResolvedTarget = if (android_targets.len == 0)
-        root_target_single[0..]
-    else
-        android_targets;
+    
 
     const android_apk: ?*android.Apk = blk: {
         if (android_targets.len == 0) break :blk null;
@@ -103,7 +100,10 @@ fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 
         break :blk apk;
     };
-    for (targets) |t| {
+    for (android_targets) |t| {
+            if (!t.result.abi.isAndroid()) {
+            @panic("expected Android target");
+        }
         const app_module = b.createModule(.{
             .target = t,
             .optimize = optimize,
@@ -131,7 +131,7 @@ fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
         // if building as library for Android, add this target
         // NOTE: Android has different CPU targets so you need to build a version of your
         //       code for x86, x86_64, arm, arm64 and more
-        if (target.result.abi.isAndroid()) {
+        if (t.result.abi.isAndroid()) {
             const apk: *android.Apk = android_apk orelse @panic("Android APK should be initialized");
             const android_dep = b.dependency("android", .{
                 .optimize = optimize,
@@ -144,7 +144,7 @@ fn buildApk(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
             b.installArtifact(exe);
 
             // If only 1 target, add "run" step
-            if (targets.len == 1) {
+            if (android_targets.len == 1) {
                 const run_step = b.step("run", "Run the application");
                 const run_cmd = b.addRunArtifact(exe);
                 run_step.dependOn(&run_cmd.step);
