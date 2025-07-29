@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
       
 jobs:
-  build-ios:
+  build-ios-simulator:
     runs-on: macos-latest
 
     steps:
