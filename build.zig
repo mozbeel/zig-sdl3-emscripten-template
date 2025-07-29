@@ -39,6 +39,25 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 
     const sdl_lib = sdl3.artifact("SDL3");
 
+    if (target.result.os.tag == .ios) {
+        sdl_lib.linkSystemLibrary("System"); // For libSystem
+        sdl_lib.linkSystemLibrary("c");
+
+        // Link required iOS frameworks
+        sdl_lib.linkFramework("Foundation");
+        sdl_lib.linkFramework("CoreVideo");
+        sdl_lib.linkFramework("CoreMedia");
+        sdl_lib.linkFramework("CoreAudio");
+        sdl_lib.linkFramework("CoreMotion");
+        sdl_lib.linkFramework("CoreGraphics");
+        sdl_lib.linkFramework("AVFoundation");
+        sdl_lib.linkFramework("AudioToolbox");
+        sdl_lib.linkFramework("GameController");
+        sdl_lib.linkFramework("CoreHaptics"); // weak_framework
+        sdl_lib.linkFramework("UIKit");
+        sdl_lib.linkFramework("OpenGLES");
+        sdl_lib.linkFramework("Metal");
+    }
 
     exe.linkLibrary(sdl_lib);
 
