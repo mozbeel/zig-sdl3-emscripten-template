@@ -39,27 +39,6 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 
     const sdl_lib = sdl3.artifact("SDL3");
 
-    if (target.result.os.tag == .ios) {
-        const sdk_include = b.pathJoin(&.{ b.sysroot.?, "usr", "include" });
-        exe.addSystemIncludePath(.{ .cwd_relative = sdk_include });
-        const framework_path = b.pathJoin(&.{ b.sysroot.?, "System", "Library", "Frameworks" });
-        sdl_lib.addSystemFrameworkPath(.{ .cwd_relative = framework_path });
-        sdl_lib.addSystemIncludePath(.{ .cwd_relative = sdk_include });
-        exe.addSystemFrameworkPath(.{ .cwd_relative = framework_path });
-
-        const lib_path = b.pathJoin(&.{ b.sysroot.?, "usr", "lib" });
-        exe.addLibraryPath(.{ .cwd_relative = lib_path });
-        sdl_lib.addLibraryPath(.{ .cwd_relative = lib_path });
-
-        const frameworks = &[_][]const u8{
-            "Foundation", "CoreVideo", "CoreMedia", "CoreAudio", "CoreMotion", "CoreGraphics",
-            "AVFoundation", "AudioToolbox", "GameController", "CoreHaptics", "UIKit", "OpenGLES", "Metal", "QuartzCore"
-        };
-
-        for (frameworks) |fw| {
-            exe.linkFramework(fw);
-        }
-    }
     exe.linkLibrary(sdl_lib);
 
     b.installArtifact(exe);
