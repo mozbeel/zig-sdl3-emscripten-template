@@ -16,7 +16,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Check Xcode
-        run: ls $(xcrun --sdk iphoneos --show-sdk-path)
+        run: ls $(xcrun --sdk iphoneos --show-sdk-path)/System/Library
     
       - name: Install dependencies
         run: brew install zig
