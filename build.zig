@@ -1,6 +1,7 @@
 const std = @import("std");
 const zemscripten = @import("zemscripten");
 const android = @import("android");
+const builtin = @import("builtin");
 const root = @import("root");
 
 pub fn build(b: *std.Build) !void {
@@ -40,6 +41,17 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
     });
 
     const sdl_lib = sdl3.artifact("SDL3");
+
+    if (target.result.os.tag == .macos and builtin.os.tag != .macos) {
+        exe.addFrameworkPath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"}); 
+        exe.addSystemIncludePath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include"});
+        exe.addLibraryPath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/" }); 
+
+        sdl_lib.addFrameworkPath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"}); 
+        sdl_lib.addSystemIncludePath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include"});
+        sdl_lib.addLibraryPath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/" }); 
+
+    }
 
     exe.linkLibrary(sdl_lib);
 
