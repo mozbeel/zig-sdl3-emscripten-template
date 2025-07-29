@@ -1,0 +1,29 @@
+
+name: Build for macOS
+
+on:
+  workflow_dispatch:
+      
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Install dependencies
+        run: brew install zig
+        
+      - name: Build project
+        run: zig build
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: zig-out
+          path: zig-out
+
