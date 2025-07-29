@@ -13,14 +13,11 @@ pub fn build(b: *std.Build) !void {
 
     if (android_targets.len > 0) {
         try buildApk(b, android_targets, optimize);
-    } else if (os == .windows or os == .linux or os == .macos) {
+    } else if (os == .windows or os == .linux or os == .macos or os == .ios) {
         try buildBin(b, target, optimize);
     } else if(os == .emscripten) {
         try buildWeb(b, target, optimize);
-    } else if(os == .ios) {
-        @panic("No iOS support yet!");
     }
-
 }
 
 fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) !void {
@@ -41,17 +38,6 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
     });
 
     const sdl_lib = sdl3.artifact("SDL3");
-
-    if (target.result.os.tag == .macos and builtin.os.tag != .macos) {
-        exe.addFrameworkPath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"}); 
-        exe.addSystemIncludePath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include"});
-        exe.addLibraryPath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/" }); 
-
-        sdl_lib.addFrameworkPath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"}); 
-        sdl_lib.addSystemIncludePath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include"});
-        sdl_lib.addLibraryPath(.{ .cwd_relative = "/home/leeb/Mac/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/" }); 
-
-    }
 
     exe.linkLibrary(sdl_lib);
 
