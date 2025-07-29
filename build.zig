@@ -39,6 +39,7 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 
     const sdl_lib = sdl3.artifact("SDL3");
 
+
     exe.linkLibrary(sdl_lib);
 
     b.installArtifact(exe);
