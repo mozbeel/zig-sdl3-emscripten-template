@@ -40,7 +40,7 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
     const sdl_lib = sdl3.artifact("SDL3");
 
     if (target.result.os.tag == .ios) {
-        sdl_lib.addFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ b.sysroot.?, "System", "Library", "Frameworks" })});
+        sdl_lib.addSystemFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ b.sysroot.?, "System", "Library", "Frameworks" })});
     }
     exe.linkLibrary(sdl_lib);
 
