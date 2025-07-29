@@ -19,7 +19,7 @@ jobs:
         run: brew install zig
         
       - name: Build project
-        run: zig build -Dtarget=x86_64-ios-simulator --sysroot "$(xcrun --sdk iphonesimulator --show-sdk-path)"
+        run: zig build -Dtarget=aarch64-ios-simulator --sysroot "$(xcrun --sdk iphonesimulator --show-sdk-path)"
 
       - name: Upload build output
         uses: actions/upload-artifact@v4
