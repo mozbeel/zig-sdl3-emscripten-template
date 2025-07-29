@@ -1,5 +1,5 @@
 
-name: Build for iOS
+name: Build for iOS Simulator
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ jobs:
         run: brew install zig
         
       - name: Build project
-        run: zig build -Dtarget=aarch64-ios --sysroot "$(xcrun --sdk iphoneos --show-sdk-path)"
+        run: zig build -Dtarget=x86_64-ios --sysroot "$(xcrun --sdk iphonesimulator --show-sdk-path)"
 
       - name: Upload build output
         uses: actions/upload-artifact@v4
