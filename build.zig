@@ -48,7 +48,7 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
         exe.addSystemFrameworkPath(.{ .cwd_relative = framework_path });
 
         const lib_path = b.pathJoin(&.{ b.sysroot.?, "usr", "lib" });
-        exe.addSystemLibraryPath(.{ .cwd_relative = lib_path });
+        exe.addLibraryPath(.{ .cwd_relative = lib_path });
         sdl_lib.addLibraryPath(.{ .cwd_relative = lib_path });
 
         const frameworks = &[_][]const u8{
