@@ -50,7 +50,7 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
         };
 
         for (frameworks) |fw| {
-            exe.linkFramework(fw, .{});
+            exe.linkFramework(fw);
         }
     }
     exe.linkLibrary(sdl_lib);
