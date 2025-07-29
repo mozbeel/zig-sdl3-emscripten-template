@@ -41,6 +41,9 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 
     if (target.result.os.tag == .ios) {
         sdl_lib.addFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ b.sysroot.?, "System", "Library", "Frameworks" }) });
+        exe.addFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ b.sysroot.?, "System", "Library", "Frameworks" }) });
+
+
     }
 
     exe.linkLibrary(sdl_lib);
