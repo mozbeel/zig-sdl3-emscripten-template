@@ -39,7 +39,8 @@ fn buildBin(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.built
 
     const sdl_lib = sdl3.artifact("SDL3");
 
-    if (target.result.os.tag == .ios) {
+    // Only execute this if the target is ios or 
+    if (target.result.os.tag == .ios or target.result.os.tag == .ios and builtin.os.tag != .macos) {
         exe.addFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ b.sysroot.?, "System", "Library", "Frameworks" }) });
         exe.addIncludePath(.{ .cwd_relative = b.pathJoin(&.{ b.sysroot.?, "usr", "include" }) });
         exe.addLibraryPath(.{ .cwd_relative = b.pathJoin(&.{ "/usr", "lib" }) });
